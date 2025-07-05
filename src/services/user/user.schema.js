@@ -7,7 +7,10 @@ import { dataValidator, queryValidator } from '../../validators.js'
 export const userSchema = Type.Object(
   {
     id: Type.Number(),
-    text: Type.String()
+    nama: Type.String(),
+    username: Type.String(),
+    password: Type.String(),
+    id_role: Type.Optional(Type.Number())
   },
   { $id: 'User', additionalProperties: false }
 )
@@ -17,7 +20,7 @@ export const userResolver = resolve({})
 export const userExternalResolver = resolve({})
 
 // Schema for creating new entries
-export const userDataSchema = Type.Pick(userSchema, ['text'], {
+export const userDataSchema = Type.Pick(userSchema, ['nama', 'username', 'password', 'id_role'], {
   $id: 'UserData'
 })
 export const userDataValidator = getValidator(userDataSchema, dataValidator)
@@ -31,7 +34,7 @@ export const userPatchValidator = getValidator(userPatchSchema, dataValidator)
 export const userPatchResolver = resolve({})
 
 // Schema for allowed query properties
-export const userQueryProperties = Type.Pick(userSchema, ['id', 'text'])
+export const userQueryProperties = Type.Pick(userSchema, ['id', 'nama', 'username', 'id_role'])
 export const userQuerySchema = Type.Intersect(
   [
     querySyntax(userQueryProperties),

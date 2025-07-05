@@ -12,5 +12,26 @@
   "mssql": {
     "client": "mssql",
     "connection": "mssql://root:password@localhost:1433/leasing_backend"
+  },
+  "authentication": {
+    "entity": "authentication",
+    "service": "authentication",
+    "secret": "Q/D8/53p/NFm6Gr9imQp9kC1dCqFeLoh",
+    "authStrategies": [
+      "jwt",
+      "local"
+    ],
+    "jwtOptions": {
+      "header": {
+        "typ": "access"
+      },
+      "audience": "https://yourdomain.com",
+      "algorithm": "HS256",
+      "expiresIn": "1d"
+    },
+    "local": {
+      "usernameField": "username",
+      "passwordField": "password"
+    }
   }
 }
