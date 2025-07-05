@@ -1,7 +1,25 @@
-// For more information about this file see https://dove.feathersjs.com/guides/cli/databases.html
-import { app } from './src/app.js'
+import dotenv from 'dotenv'
+import knex from 'knex'
 
-// Load our database connection info from the app configuration
-const config = app.get('mssql')
+dotenv.config()
 
-export default config
+const defaultKnex = knex({
+  client: process.env.DB_CLIENT,
+  connection: {
+    host: process.env.DB_HOST,
+    port: parseInt(process.env.DB_PORT, 10),
+    user: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_NAME,
+    options: {
+      encrypt: false,
+      trustServerCertificate: true
+    }
+  },
+  pool: { min: 0, max: 10 },
+  migrations: {
+    tableName: 'knex_migrations'
+  }
+})
+
+export { defaultKnex }
