@@ -3,7 +3,7 @@ import knex from 'knex'
 
 dotenv.config()
 
-const defaultKnex = knex({
+const db = knex({
   client: process.env.DB_CLIENT,
   connection: {
     host: process.env.DB_HOST,
@@ -22,4 +22,4 @@ const defaultKnex = knex({
   }
 })
 
-export { defaultKnex }
+export { db }

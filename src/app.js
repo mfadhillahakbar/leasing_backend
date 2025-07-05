@@ -17,7 +17,6 @@ import { logError } from './hooks/log-error.js'
 import { mssql } from './mssql.js'
 import { services } from './services/index.js'
 import { channels } from './channels.js'
-import { defaultKnex } from '../knexfile.js'
 
 const app = express(feathers())
 
@@ -46,8 +45,6 @@ app.configure(channels)
 // Configure a middleware for 404s and the error handler
 app.use(notFound())
 app.use(errorHandler({ logger }))
-
-app.set('mssqlClient', defaultKnex)
 
 // Register hooks that run on all service methods
 app.hooks({
