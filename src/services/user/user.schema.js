@@ -7,8 +7,8 @@ import { dataValidator, queryValidator } from '../../validators.js'
 export const userSchema = Type.Object(
   {
     id: Type.Number(),
-    nama: Type.String(),
-    username: Type.String(),
+    nama: Type.String({ maxLength: 20 }),
+    username: Type.String({ maxLength: 15 }),
     password: Type.String(),
     id_role: Type.Optional(Type.Number())
   },
