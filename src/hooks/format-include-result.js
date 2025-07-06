@@ -1,31 +1,37 @@
 export const formatIncludeResult = () => {
   return async context => {
     const { result, params } = context;
-    const alias = params._joinAlias;
-    const fields = params._joinFields;
+    const aliases = params._joinAlias;
+    const fieldsMap = params._joinFields;
 
-    if (!alias || !fields) return context;
+    if (!aliases || !fieldsMap) return context;
 
-    const mapJoinFields = item => {
-      const nested = {};
+    const processItem = (item) => {
       const rest = { ...item };
+      const joined = {};
 
-      for (const field of fields) {
-        const key = `${alias}_${field}`;
-        nested[field] = item[key];
-        delete rest[key];
+      for (const alias of aliases) {
+        const nested = {};
+        const fields = fieldsMap[alias];
+
+        for (const field of fields) {
+          const key = `${alias}_${field}`;
+          nested[field] = rest[key];
+          delete rest[key];
+        }
+
+        joined[alias] = nested;
       }
 
-      return {
-        ...rest,
-        [alias]: nested
-      };
+      return { ...rest, ...joined };
     };
 
     if (Array.isArray(result.data)) {
-      result.data = result.data.map(mapJoinFields);
-    } else {
-      context.result = mapJoinFields(result);
+      result.data = result.data.map(processItem);
+    } else if (Array.isArray(result)) {
+      context.result = result.map(processItem);
+    } else if (result) {
+      context.result = processItem(result);
     }
 
     return context;

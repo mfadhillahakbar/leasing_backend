@@ -48,19 +48,23 @@ export const user = app => {
       ],
       find: [
         authenticate('jwt'),
-        includeTable({
-          joinTable: 'role',
-          localKey: 'user.id_role',
-          foreignKey: 'role.id'
-        })
+        includeTable([
+          {
+            joinTable: 'role',
+            localKey: 'user.id_role',
+            foreignKey: 'role.id'
+          }
+        ])
       ],
       get: [
         authenticate('jwt'),
-        includeTable({
-          joinTable: 'role',
-          localKey: 'user.id_role',
-          foreignKey: 'role.id'
-        })
+        includeTable([
+          {
+            joinTable: 'role',
+            localKey: 'user.id_role',
+            foreignKey: 'role.id'
+          }
+        ])
       ],
       create: [
         schemaHooks.validateData(userDataValidator),

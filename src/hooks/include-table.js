@@ -1,4 +1,4 @@
-export const includeTable = ({ joinTable, localKey, foreignKey }) => {
+export const includeTable = (joinConfigs = []) => {
   return async context => {
     const { app, service, params } = context;
 
@@ -9,19 +9,25 @@ export const includeTable = ({ joinTable, localKey, foreignKey }) => {
       throw new Error('Relasi tabel tidak ditemukan');
     }
 
-    const columns = await knex(joinTable).columnInfo();
-    const selectFields = Object.keys(columns).map(col =>
-      `${joinTable}.${col} as ${joinTable}_${col}`
-    );
+    let builder = knex.from(baseTable).select(`${baseTable}.*`);
 
-    const builder = knex.from(baseTable)
-      .leftJoin(joinTable, localKey, foreignKey)
-      .select(`${baseTable}.*`, ...selectFields);
+    const allJoinFields = {};
+    for (const config of joinConfigs) {
+      const { joinTable, localKey, foreignKey } = config;
+
+      const columns = await knex(joinTable).columnInfo();
+      const selectFields = Object.keys(columns).map(col =>
+        `${joinTable}.${col} as ${joinTable}_${col}`
+      );
+
+      builder = builder.leftJoin(joinTable, localKey, foreignKey).select(...selectFields);
+
+      allJoinFields[joinTable] = Object.keys(columns);
+    }
 
     params.knex = builder;
-
-    params._joinAlias = joinTable;
-    params._joinFields = Object.keys(columns);
+    params._joinAlias = Object.keys(allJoinFields);
+    params._joinFields = allJoinFields;
 
     return context;
   };
