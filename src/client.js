@@ -28,5 +28,7 @@ export const createClient = (connection, authenticationOptions = {}) => {
 
   client.configure(pembayaranClient)
 
+  client.configure(pelangganClient)
+
   return client
 }
