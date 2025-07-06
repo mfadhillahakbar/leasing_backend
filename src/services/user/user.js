@@ -18,6 +18,8 @@ import {
 import { UserService, getOptions } from './user.class.js'
 import { userPath, userMethods } from './user.shared.js'
 import { setNow } from 'feathers-hooks-common'
+import { includeTable } from '../../hooks/include-table.js'
+import { formatIncludeResult } from '../../hooks/format-include-result.js'
 
 export * from './user.class.js'
 export * from './user.schema.js'
@@ -44,8 +46,22 @@ export const user = app => {
         schemaHooks.validateQuery(userQueryValidator),
         schemaHooks.resolveQuery(userQueryResolver)
       ],
-      find: [authenticate('jwt')],
-      get: [authenticate('jwt')],
+      find: [
+        authenticate('jwt'),
+        includeTable({
+          joinTable: 'role',
+          localKey: 'user.id_role',
+          foreignKey: 'role.id'
+        })
+      ],
+      get: [
+        authenticate('jwt'),
+        includeTable({
+          joinTable: 'role',
+          localKey: 'user.id_role',
+          foreignKey: 'role.id'
+        })
+      ],
       create: [
         schemaHooks.validateData(userDataValidator),
         schemaHooks.resolveData(userDataResolver),
@@ -61,7 +77,10 @@ export const user = app => {
       remove: []
     },
     after: {
-      all: [protect('password')]
+      all: [
+        protect('password'),
+        formatIncludeResult()
+      ]
     },
     error: {
       all: []
