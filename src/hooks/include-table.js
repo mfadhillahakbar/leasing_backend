@@ -10,8 +10,8 @@ export const includeTable = (joinConfigs = []) => {
     }
 
     let builder = knex.from(baseTable).select(`${baseTable}.*`);
-
     const allJoinFields = {};
+
     for (const config of joinConfigs) {
       const { joinTable, localKey, foreignKey } = config;
 
@@ -21,13 +21,19 @@ export const includeTable = (joinConfigs = []) => {
       );
 
       builder = builder.leftJoin(joinTable, localKey, foreignKey).select(...selectFields);
-
       allJoinFields[joinTable] = Object.keys(columns);
     }
+
+    const query = params.query || {};
+    Object.entries(query).forEach(([key, value]) => {
+      builder.where(`${baseTable}.${key}`, value);
+    });
 
     params.knex = builder;
     params._joinAlias = Object.keys(allJoinFields);
     params._joinFields = allJoinFields;
+
+    delete params.query;
 
     return context;
   };

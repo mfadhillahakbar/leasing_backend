@@ -15,6 +15,7 @@ import {
 import { PenjualanService, getOptions } from './penjualan.class.js'
 import { penjualanPath, penjualanMethods } from './penjualan.shared.js'
 import { setNow } from 'feathers-hooks-common'
+import { restrictAdminRole } from '../../hooks/restrict-admin-role.js'
 
 export * from './penjualan.class.js'
 export * from './penjualan.schema.js'
@@ -42,7 +43,7 @@ export const penjualan = app => {
         schemaHooks.validateQuery(penjualanQueryValidator),
         schemaHooks.resolveQuery(penjualanQueryResolver)
       ],
-      find: [],
+      find: [restrictAdminRole()],
       get: [],
       create: [
         schemaHooks.validateData(penjualanDataValidator),
@@ -51,6 +52,7 @@ export const penjualan = app => {
       patch: [
         schemaHooks.validateData(penjualanPatchValidator),
         schemaHooks.resolveData(penjualanPatchResolver),
+        restrictAdminRole(),
         setNow('updated_at')
       ],
       remove: []

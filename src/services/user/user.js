@@ -20,6 +20,7 @@ import { userPath, userMethods } from './user.shared.js'
 import { setNow } from 'feathers-hooks-common'
 import { includeTable } from '../../hooks/include-table.js'
 import { formatIncludeResult } from '../../hooks/format-include-result.js'
+import { restrictAdminRole } from '../../hooks/restrict-admin-role.js'
 
 export * from './user.class.js'
 export * from './user.schema.js'
@@ -54,7 +55,8 @@ export const user = app => {
             localKey: 'user.id_role',
             foreignKey: 'role.id'
           }
-        ])
+        ]),
+        restrictAdminRole()
       ],
       get: [
         authenticate('jwt'),
@@ -64,7 +66,8 @@ export const user = app => {
             localKey: 'user.id_role',
             foreignKey: 'role.id'
           }
-        ])
+        ]),
+        restrictAdminRole()
       ],
       create: [
         schemaHooks.validateData(userDataValidator),
@@ -75,10 +78,11 @@ export const user = app => {
         authenticate('jwt'),
         schemaHooks.validateData(userPatchValidator),
         schemaHooks.resolveData(userPatchResolver),
+        restrictAdminRole(),
         hashPassword('password'),
         setNow('updated_at')
       ],
-      remove: []
+      remove: [restrictAdminRole()]
     },
     after: {
       all: [

@@ -15,6 +15,7 @@ import {
 import { MotorService, getOptions } from './motor.class.js'
 import { motorPath, motorMethods } from './motor.shared.js'
 import { setNow } from 'feathers-hooks-common'
+import { restrictAdminRole } from '../../hooks/restrict-admin-role.js'
 
 export * from './motor.class.js'
 export * from './motor.schema.js'
@@ -46,14 +47,16 @@ export const motor = app => {
       get: [],
       create: [
         schemaHooks.validateData(motorDataValidator),
-        schemaHooks.resolveData(motorDataResolver)
+        schemaHooks.resolveData(motorDataResolver),
+        restrictAdminRole()
       ],
       patch: [
         schemaHooks.validateData(motorPatchValidator),
         schemaHooks.resolveData(motorPatchResolver),
+        restrictAdminRole(),
         setNow('updated_at')
       ],
-      remove: []
+      remove: [restrictAdminRole()]
     },
     after: {
       all: []

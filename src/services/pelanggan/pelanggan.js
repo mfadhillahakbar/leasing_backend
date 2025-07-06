@@ -15,6 +15,8 @@ import {
 import { PelangganService, getOptions } from './pelanggan.class.js'
 import { pelangganPath, pelangganMethods } from './pelanggan.shared.js'
 import { setNow } from 'feathers-hooks-common'
+import { restrictAdminRole } from '../../hooks/restrict-admin-role.js'
+import { createcustomerUser } from '../../hooks/create-customer-user.js'
 
 export * from './pelanggan.class.js'
 export * from './pelanggan.schema.js'
@@ -42,7 +44,7 @@ export const pelanggan = app => {
         schemaHooks.validateQuery(pelangganQueryValidator),
         schemaHooks.resolveQuery(pelangganQueryResolver)
       ],
-      find: [],
+      find: [restrictAdminRole()],
       get: [],
       create: [
         schemaHooks.validateData(pelangganDataValidator),
@@ -56,7 +58,8 @@ export const pelanggan = app => {
       remove: []
     },
     after: {
-      all: []
+      all: [],
+      create: [createcustomerUser()],
     },
     error: {
       all: []

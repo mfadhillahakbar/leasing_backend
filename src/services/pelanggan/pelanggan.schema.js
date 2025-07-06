@@ -16,7 +16,8 @@ export const pelangganSchema = Type.Object(
     no_hp: Type.String({ maxLength: 15 }),
     email: Type.String({ maxLength: 50 }),
     pekerjaan: Type.String({ maxLength: 30 }),
-    upload_ktp: Type.String({ maxLength: 100 })
+    upload_ktp: Type.String({ maxLength: 100 }),
+    password: Type.String({ maxLength: 100 })
   },
   { $id: 'Pelanggan', additionalProperties: false }
 )
@@ -27,12 +28,19 @@ export const pelangganExternalResolver = resolve({})
 
 // Schema for creating new entries
 export const pelangganDataSchema = Type.Pick(pelangganSchema, [
-  'no_ktp', 'nama', 'alamat', 'alamat_domisili', 'jenis_kelamin', 'nama_ibu', 'no_hp', 'email', 'pekerjaan', 'upload_ktp'
+  'no_ktp', 'nama', 'alamat', 'alamat_domisili', 'jenis_kelamin', 'nama_ibu', 'no_hp', 'email', 'pekerjaan', 'upload_ktp', 'password'
 ], {
   $id: 'PelangganData'
 })
 export const pelangganDataValidator = getValidator(pelangganDataSchema, dataValidator)
-export const pelangganDataResolver = resolve({})
+export const pelangganDataResolver = resolve({
+  password: async (value, _data, context) => {
+    if (value) {
+      context.params._tempPassword = value;
+    }
+    return undefined;
+  }
+});
 
 // Schema for updating existing entries
 export const pelangganPatchSchema = Type.Partial(pelangganSchema, {

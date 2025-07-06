@@ -15,6 +15,7 @@ import {
 import { RoleService, getOptions } from './role.class.js'
 import { rolePath, roleMethods } from './role.shared.js'
 import { setNow } from 'feathers-hooks-common'
+import { restrictAdminRole } from '../../hooks/restrict-admin-role.js'
 
 export * from './role.class.js'
 export * from './role.schema.js'
@@ -40,7 +41,8 @@ export const role = app => {
     before: {
       all: [
         schemaHooks.validateQuery(roleQueryValidator),
-        schemaHooks.resolveQuery(roleQueryResolver)
+        schemaHooks.resolveQuery(roleQueryResolver),
+        restrictAdminRole()
       ],
       find: [],
       get: [],

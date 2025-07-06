@@ -15,6 +15,7 @@ import {
 import { PembayaranService, getOptions } from './pembayaran.class.js'
 import { pembayaranPath, pembayaranMethods } from './pembayaran.shared.js'
 import { setNow } from 'feathers-hooks-common'
+import { restrictAdminRole } from '../../hooks/restrict-admin-role.js'
 
 export * from './pembayaran.class.js'
 export * from './pembayaran.schema.js'
@@ -42,7 +43,7 @@ export const pembayaran = app => {
         schemaHooks.validateQuery(pembayaranQueryValidator),
         schemaHooks.resolveQuery(pembayaranQueryResolver)
       ],
-      find: [],
+      find: [restrictAdminRole()],
       get: [],
       create: [
         schemaHooks.validateData(pembayaranDataValidator),
@@ -51,9 +52,10 @@ export const pembayaran = app => {
       patch: [
         schemaHooks.validateData(pembayaranPatchValidator),
         schemaHooks.resolveData(pembayaranPatchResolver),
+        restrictAdminRole(),
         setNow('updated_at')
       ],
-      remove: []
+      remove: [restrictAdminRole()]
     },
     after: {
       all: []
