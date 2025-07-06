@@ -16,7 +16,7 @@ export const pelangganSchema = Type.Object(
     no_hp: Type.String({ maxLength: 15 }),
     email: Type.String({ maxLength: 50 }),
     pekerjaan: Type.String({ maxLength: 30 }),
-    upload_ktp: Type.String()
+    upload_ktp: Type.String({ maxLength: 100 })
   },
   { $id: 'Pelanggan', additionalProperties: false }
 )
@@ -27,16 +27,7 @@ export const pelangganExternalResolver = resolve({})
 
 // Schema for creating new entries
 export const pelangganDataSchema = Type.Pick(pelangganSchema, [
-  'no_ktp',
-  'nama',
-  'alamat',
-  'alamat_domisili',
-  'jenis_kelamin',
-  'nama_ibu',
-  'no_hp',
-  'email',
-  'pekerjaan',
-  'upload_ktp'
+  'no_ktp', 'nama', 'alamat', 'alamat_domisili', 'jenis_kelamin', 'nama_ibu', 'no_hp', 'email', 'pekerjaan', 'upload_ktp'
 ], {
   $id: 'PelangganData'
 })
@@ -51,7 +42,9 @@ export const pelangganPatchValidator = getValidator(pelangganPatchSchema, dataVa
 export const pelangganPatchResolver = resolve({})
 
 // Schema for allowed query properties
-export const pelangganQueryProperties = Type.Pick(pelangganSchema, ['id_pelanggan', 'nama', 'alamat', 'no_hp', 'email'])
+export const pelangganQueryProperties = Type.Pick(pelangganSchema, [
+  'id_pelanggan', 'no_ktp', 'nama', 'alamat', 'alamat_domisili', 'jenis_kelamin', 'nama_ibu', 'no_hp', 'email', 'pekerjaan'
+])
 export const pelangganQuerySchema = Type.Intersect(
   [
     querySyntax(pelangganQueryProperties),

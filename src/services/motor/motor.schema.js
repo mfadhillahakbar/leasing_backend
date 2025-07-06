@@ -8,6 +8,7 @@ export const motorSchema = Type.Object(
   {
     id_motor: Type.Number(),
     tipe_motor: Type.String({ maxLength: 30 }),
+    harga: Type.Number({ minimum: 0 }),
     jumlah_stok: Type.Number()
   },
   { $id: 'Motor', additionalProperties: false }
@@ -18,7 +19,7 @@ export const motorResolver = resolve({})
 export const motorExternalResolver = resolve({})
 
 // Schema for creating new entries
-export const motorDataSchema = Type.Pick(motorSchema, ['tipe_motor', 'jumlah_stok'], {
+export const motorDataSchema = Type.Pick(motorSchema, ['tipe_motor', 'harga', 'jumlah_stok'], {
   $id: 'MotorData'
 })
 export const motorDataValidator = getValidator(motorDataSchema, dataValidator)
@@ -32,7 +33,7 @@ export const motorPatchValidator = getValidator(motorPatchSchema, dataValidator)
 export const motorPatchResolver = resolve({})
 
 // Schema for allowed query properties
-export const motorQueryProperties = Type.Pick(motorSchema, ['id_motor', 'tipe_motor', 'jumlah_stok'])
+export const motorQueryProperties = Type.Pick(motorSchema, ['id_motor', 'tipe_motor', 'harga', 'jumlah_stok'])
 export const motorQuerySchema = Type.Intersect(
   [
     querySyntax(motorQueryProperties),
