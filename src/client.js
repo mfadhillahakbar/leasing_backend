@@ -30,5 +30,7 @@ export const createClient = (connection, authenticationOptions = {}) => {
 
   client.configure(pelangganClient)
 
+  client.configure(uploadClient)
+
   return client
 }

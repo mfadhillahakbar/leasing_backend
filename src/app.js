@@ -27,7 +27,7 @@ app.use(cors())
 app.use(json())
 app.use(urlencoded({ extended: true }))
 // Host the public folder
-app.use('/', serveStatic(app.get('public')))
+app.use('/public', serveStatic(app.get('public')))
 
 // Configure services and real-time functionality
 app.configure(rest())
