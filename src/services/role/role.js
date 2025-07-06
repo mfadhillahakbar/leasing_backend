@@ -14,6 +14,7 @@ import {
 } from './role.schema.js'
 import { RoleService, getOptions } from './role.class.js'
 import { rolePath, roleMethods } from './role.shared.js'
+import { setNow } from 'feathers-hooks-common'
 
 export * from './role.class.js'
 export * from './role.schema.js'
@@ -37,11 +38,21 @@ export const role = app => {
       ]
     },
     before: {
-      all: [schemaHooks.validateQuery(roleQueryValidator), schemaHooks.resolveQuery(roleQueryResolver)],
+      all: [
+        schemaHooks.validateQuery(roleQueryValidator),
+        schemaHooks.resolveQuery(roleQueryResolver)
+      ],
       find: [],
       get: [],
-      create: [schemaHooks.validateData(roleDataValidator), schemaHooks.resolveData(roleDataResolver)],
-      patch: [schemaHooks.validateData(rolePatchValidator), schemaHooks.resolveData(rolePatchResolver)],
+      create: [
+        schemaHooks.validateData(roleDataValidator),
+        schemaHooks.resolveData(roleDataResolver)
+      ],
+      patch: [
+        schemaHooks.validateData(rolePatchValidator),
+        schemaHooks.resolveData(rolePatchResolver),
+        setNow('updated_at')
+      ],
       remove: []
     },
     after: {

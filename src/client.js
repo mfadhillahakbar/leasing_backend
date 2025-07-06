@@ -22,5 +22,7 @@ export const createClient = (connection, authenticationOptions = {}) => {
 
   client.configure(roleClient)
 
+  client.configure(motorClient)
+
   return client
 }

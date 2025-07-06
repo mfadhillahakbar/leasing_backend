@@ -17,6 +17,7 @@ import {
 } from './user.schema.js'
 import { UserService, getOptions } from './user.class.js'
 import { userPath, userMethods } from './user.shared.js'
+import { setNow } from 'feathers-hooks-common'
 
 export * from './user.class.js'
 export * from './user.schema.js'
@@ -39,11 +40,24 @@ export const user = app => {
       ]
     },
     before: {
-      all: [schemaHooks.validateQuery(userQueryValidator), schemaHooks.resolveQuery(userQueryResolver)],
+      all: [
+        schemaHooks.validateQuery(userQueryValidator),
+        schemaHooks.resolveQuery(userQueryResolver)
+      ],
       find: [authenticate('jwt')],
       get: [authenticate('jwt')],
-      create: [schemaHooks.validateData(userDataValidator), schemaHooks.resolveData(userDataResolver), hashPassword('password')],
-      patch: [authenticate('jwt'), schemaHooks.validateData(userPatchValidator), schemaHooks.resolveData(userPatchResolver), hashPassword('password')],
+      create: [
+        schemaHooks.validateData(userDataValidator),
+        schemaHooks.resolveData(userDataResolver),
+        hashPassword('password')
+      ],
+      patch: [
+        authenticate('jwt'),
+        schemaHooks.validateData(userPatchValidator),
+        schemaHooks.resolveData(userPatchResolver),
+        hashPassword('password'),
+        setNow('updated_at')
+      ],
       remove: []
     },
     after: {
