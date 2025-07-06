@@ -8,13 +8,12 @@ export const penjualanSchema = Type.Object(
   {
     id_penjualan: Type.Number(),
     no_kontrak: Type.String({ maxLength: 10 }),
-    id_pelanggan: Type.String({ maxLength: 10 }),
+    id_pelanggan: Type.Number(),
     id_motor: Type.Number(),
     id_user: Type.Number(),
     uang_muka: Type.Number({ minimum: 0 }),
     tenor: Type.Number({ minimum: 0 }),
-    angsuran: Type.Number({ minimum: 0 }),
-    id_pembayaran: Type.Number()
+    angsuran: Type.Number({ minimum: 0 })
   },
   { $id: 'Penjualan', additionalProperties: false }
 )
@@ -25,7 +24,7 @@ export const penjualanExternalResolver = resolve({})
 
 // Schema for creating new entries
 export const penjualanDataSchema = Type.Pick(penjualanSchema, [
-  'no_kontrak', 'id_pelanggan', 'id_motor', 'id_user', 'uang_muka', 'tenor', 'angsuran', 'id_pembayaran'
+  'no_kontrak', 'id_pelanggan', 'id_motor', 'id_user', 'uang_muka', 'tenor', 'angsuran'
 ], {
   $id: 'PenjualanData'
 })
@@ -41,7 +40,7 @@ export const penjualanPatchResolver = resolve({})
 
 // Schema for allowed query properties
 export const penjualanQueryProperties = Type.Pick(penjualanSchema, [
-  'id_penjualan', 'no_kontrak', 'id_pelanggan', 'id_motor', 'id_user', 'uang_muka', 'tenor', 'angsuran', 'id_pembayaran'
+  'id_penjualan', 'no_kontrak', 'id_pelanggan', 'id_motor', 'id_user', 'uang_muka', 'tenor', 'angsuran'
 ])
 export const penjualanQuerySchema = Type.Intersect(
   [

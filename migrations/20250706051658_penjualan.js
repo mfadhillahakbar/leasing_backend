@@ -8,7 +8,6 @@ export async function up(knex) {
     table.decimal('uang_muka', 20, 2).defaultTo(0);
     table.integer('tenor').defaultTo(0);
     table.decimal('angsuran', 20, 2).defaultTo(0);
-    table.integer('id_pembayaran').unsigned().nullable();
     table.dateTime('created_at').defaultTo(knex.fn.now());
     table.dateTime('updated_at').defaultTo(knex.fn.now());
   })

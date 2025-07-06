@@ -119,3 +119,12 @@ dist
 .sqlite
 
 lib/
+
+# images uploaded to the public directory
+public/*.png
+public/*.jpg
+public/*.jpeg
+public/*.gif
+public/*.svg
+public/*.webp
+public/*.ico
