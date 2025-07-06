@@ -24,5 +24,7 @@ export const createClient = (connection, authenticationOptions = {}) => {
 
   client.configure(motorClient)
 
+  client.configure(penjualanClient)
+
   return client
 }
