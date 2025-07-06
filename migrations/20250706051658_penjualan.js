@@ -1,7 +1,7 @@
 export async function up(knex) {
   await knex.schema.createTable('tb_penjualan', table => {
     table.increments('id_penjualan').primary();
-    table.string('no_kontrak', 10);
+    table.string('no_kontrak', 10).unique();
     table.integer('id_pelanggan').unsigned();
     table.integer('id_motor').unsigned();
     table.integer('id_user').unsigned();
