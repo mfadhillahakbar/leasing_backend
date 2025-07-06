@@ -26,7 +26,9 @@ export const includeTable = (joinConfigs = []) => {
 
     const query = params.query || {};
     Object.entries(query).forEach(([key, value]) => {
-      builder.where(`${baseTable}.${key}`, value);
+      if (!key.startsWith('$')) {
+        builder.where(`${baseTable}.${key}`, value);
+      }
     });
 
     params.knex = builder;
