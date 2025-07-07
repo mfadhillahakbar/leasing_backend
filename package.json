@@ -61,11 +61,14 @@
     "@feathersjs/transport-commons": "^5.0.34",
     "@feathersjs/typebox": "^5.0.34",
     "compression": "^1.8.0",
+    "dayjs": "^1.11.13",
     "dotenv": "^17.0.1",
     "feathers-hooks-common": "^8.2.1",
     "knex": "^3.1.0",
     "mssql": "^11.0.1",
-    "winston": "^3.17.0"
+    "multer": "^2.0.1",
+    "winston": "^3.17.0",
+    "xlsx": "^0.18.5"
   },
   "devDependencies": {
     "@feathersjs/cli": "5.0.34",

@@ -45,6 +45,17 @@ app.configure(authentication)
 app.configure(services)
 app.configure(channels)
 
+app.get('/download/report', async (req, res, next) => {
+  try {
+    await app.service('report').find({
+      query: req.query,
+      res
+    });
+  } catch (error) {
+    next(error);
+  }
+});
+
 // Configure a middleware for 404s and the error handler
 app.use(notFound())
 app.use(errorHandler({ logger }))
