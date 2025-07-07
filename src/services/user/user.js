@@ -49,25 +49,13 @@ export const user = app => {
       ],
       find: [
         authenticate('jwt'),
-        includeTable([
-          {
-            joinTable: 'role',
-            localKey: 'user.id_role',
-            foreignKey: 'role.id'
-          }
-        ]),
-        restrictAdminRole()
+        restrictAdminRole(),
+        includeTable(['role'])
       ],
       get: [
         authenticate('jwt'),
-        includeTable([
-          {
-            joinTable: 'role',
-            localKey: 'user.id_role',
-            foreignKey: 'role.id'
-          }
-        ]),
-        restrictAdminRole()
+        restrictAdminRole(),
+        includeTable(['role'])
       ],
       create: [
         schemaHooks.validateData(userDataValidator),

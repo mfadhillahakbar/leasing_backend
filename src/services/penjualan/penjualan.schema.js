@@ -46,7 +46,9 @@ export const penjualanQuerySchema = Type.Intersect(
   [
     querySyntax(penjualanQueryProperties),
     // Add additional query properties here
-    Type.Object({}, { additionalProperties: false })
+    Type.Object({
+      q: Type.Optional(Type.String())
+    }, { additionalProperties: false })
   ],
   { additionalProperties: false }
 )

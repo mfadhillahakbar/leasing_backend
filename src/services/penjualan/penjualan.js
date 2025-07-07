@@ -16,6 +16,9 @@ import { PenjualanService, getOptions } from './penjualan.class.js'
 import { penjualanPath, penjualanMethods } from './penjualan.shared.js'
 import { setNow } from 'feathers-hooks-common'
 import { restrictAdminRole } from '../../hooks/restrict-admin-role.js'
+import { includeTable } from '../../hooks/include-table.js'
+import { formatIncludeResult } from '../../hooks/format-include-result.js'
+import { handleSearch } from '../../hooks/handle-search.js'
 
 export * from './penjualan.class.js'
 export * from './penjualan.schema.js'
@@ -43,8 +46,12 @@ export const penjualan = app => {
         schemaHooks.validateQuery(penjualanQueryValidator),
         schemaHooks.resolveQuery(penjualanQueryResolver)
       ],
-      find: [restrictAdminRole()],
-      get: [],
+      find: [
+        restrictAdminRole(),
+        includeTable(['user', 'tb_motor', 'tb_pelanggan']),
+        handleSearch(['tb_pelanggan.nama', 'tb_motor.tipe_motor']),
+      ],
+      get: [includeTable(['user', 'tb_motor', 'tb_pelanggan'])],
       create: [
         schemaHooks.validateData(penjualanDataValidator),
         schemaHooks.resolveData(penjualanDataResolver)
@@ -58,7 +65,7 @@ export const penjualan = app => {
       remove: []
     },
     after: {
-      all: []
+      all: [formatIncludeResult()],
     },
     error: {
       all: []
