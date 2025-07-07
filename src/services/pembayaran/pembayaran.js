@@ -16,6 +16,8 @@ import { PembayaranService, getOptions } from './pembayaran.class.js'
 import { pembayaranPath, pembayaranMethods } from './pembayaran.shared.js'
 import { setNow } from 'feathers-hooks-common'
 import { restrictAdminRole } from '../../hooks/restrict-admin-role.js'
+import { includeTable } from '../../hooks/include-table.js'
+import { formatIncludeResult } from '../../hooks/format-include-result.js'
 
 export * from './pembayaran.class.js'
 export * from './pembayaran.schema.js'
@@ -43,8 +45,11 @@ export const pembayaran = app => {
         schemaHooks.validateQuery(pembayaranQueryValidator),
         schemaHooks.resolveQuery(pembayaranQueryResolver)
       ],
-      find: [restrictAdminRole()],
-      get: [],
+      find: [
+        restrictAdminRole(),
+        includeTable(['tb_penjualan'])
+      ],
+      get: [includeTable(['tb_penjualan'])],
       create: [
         schemaHooks.validateData(pembayaranDataValidator),
         schemaHooks.resolveData(pembayaranDataResolver)
@@ -58,7 +63,7 @@ export const pembayaran = app => {
       remove: [restrictAdminRole()]
     },
     after: {
-      all: []
+      all: [formatIncludeResult()]
     },
     error: {
       all: []
