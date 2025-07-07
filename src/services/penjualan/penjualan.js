@@ -19,6 +19,7 @@ import { restrictAdminRole } from '../../hooks/restrict-admin-role.js'
 import { includeTable } from '../../hooks/include-table.js'
 import { formatIncludeResult } from '../../hooks/format-include-result.js'
 import { handleSearch } from '../../hooks/handle-search.js'
+import { decrementMotorStock } from '../../hooks/decrement-motor-stock.js'
 
 export * from './penjualan.class.js'
 export * from './penjualan.schema.js'
@@ -54,7 +55,8 @@ export const penjualan = app => {
       get: [includeTable(['user', 'tb_motor', 'tb_pelanggan'])],
       create: [
         schemaHooks.validateData(penjualanDataValidator),
-        schemaHooks.resolveData(penjualanDataResolver)
+        schemaHooks.resolveData(penjualanDataResolver),
+        decrementMotorStock()
       ],
       patch: [
         schemaHooks.validateData(penjualanPatchValidator),
