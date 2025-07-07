@@ -2,7 +2,7 @@ import { BadRequest, NotFound } from '@feathersjs/errors';
 
 export const decrementMotorStock = () => {
   return async (context) => {
-    const { app, data } = context;
+    const { app, data, params } = context;
 
     if (!data || !data.id_motor) {
       throw new BadRequest('Data penjualan tidak valid.');
@@ -25,6 +25,8 @@ export const decrementMotorStock = () => {
     await knex('tb_motor')
       .where('id_motor', data.id_motor)
       .decrement('jumlah_stok', 1);
+
+    params._decrementedStock = true;
 
     return context;
   };
