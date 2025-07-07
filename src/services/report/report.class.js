@@ -1,6 +1,6 @@
 import XLSX from 'xlsx';
 import dayjs from 'dayjs';
-import { BadRequest } from '@feathersjs/errors';
+import { BadRequest, NotFound } from '@feathersjs/errors';
 
 // This is a skeleton for a custom service class. Remove or add the methods you need here
 export class ReportService {
@@ -12,10 +12,10 @@ export class ReportService {
   async find(params) {
     const knex = this.app.get('mssqlClient');
     const { query = {}, res } = params;
-    const { start, end } = query;
+    const { from, to } = query;
 
-    if (!res) {
-      throw new BadRequest('Export hanya bisa melalui endpoint Express langsung (res diperlukan).');
+    if ((from && !to) || (!from && to)) {
+      throw new BadRequest('Parameter from dan to harus dikirim berpasangan.');
     }
 
     const baseQuery = knex('tb_penjualan as p')
@@ -36,14 +36,18 @@ export class ReportService {
       )
       .orderBy('p.created_at', 'desc');
 
-    if (start) {
-      baseQuery.where('p.created_at', '>=', dayjs(start).startOf('day').format());
+    if (from) {
+      baseQuery.where('p.created_at', '>=', dayjs(from).startOf('day').format());
     }
-    if (end) {
-      baseQuery.where('p.created_at', '<=', dayjs(end).endOf('day').format());
+    if (to) {
+      baseQuery.where('p.created_at', '<=', dayjs(to).endOf('day').format());
     }
 
     const rawData = await baseQuery;
+
+    if (!rawData || rawData.length === 0) {
+      throw new NotFound('Data laporan tidak ditemukan pada rentang waktu tersebut.');
+    }
 
     const renamedData = rawData.map((item) => ({
       'No. Kontrak': item.no_kontrak,
@@ -65,7 +69,7 @@ export class ReportService {
 
     const buffer = XLSX.write(workbook, { type: 'buffer', bookType: 'xlsx' });
 
-    const filename = `laporan-penjualan${start || end ? `-${start || ''}-sd-${end || ''}` : ''}.xlsx`;
+    const filename = `laporan-penjualan${from || to ? `-${from || ''}-sd-${to || ''}` : ''}.xlsx`;
 
     res.setHeader('Content-Disposition', `attachment; filename="${filename}"`);
     res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');

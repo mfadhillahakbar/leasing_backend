@@ -6,8 +6,8 @@ import { dataValidator, queryValidator } from '../../validators.js'
 // Main data model schema
 export const reportSchema = Type.Object(
   {
-    id: Type.Number(),
-    text: Type.String()
+    from: { type: 'string', format: 'date' },
+    to: { type: 'string', format: 'date' }
   },
   { $id: 'Report', additionalProperties: false }
 )
@@ -31,7 +31,7 @@ export const reportPatchValidator = getValidator(reportPatchSchema, dataValidato
 export const reportPatchResolver = resolve({})
 
 // Schema for allowed query properties
-export const reportQueryProperties = Type.Pick(reportSchema, ['id', 'text'])
+export const reportQueryProperties = Type.Pick(reportSchema, ['from', 'to'])
 export const reportQuerySchema = Type.Intersect(
   [
     querySyntax(reportQueryProperties),
