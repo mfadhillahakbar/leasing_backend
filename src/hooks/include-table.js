@@ -75,8 +75,6 @@ export const includeTable = (configs = []) => {
     params._joinAlias = Object.keys(allJoinFields);
     params._joinFields = allJoinFields;
 
-    delete params.query;
-
     return context;
   };
 };
