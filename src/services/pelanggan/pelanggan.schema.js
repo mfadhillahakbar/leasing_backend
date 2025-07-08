@@ -7,14 +7,21 @@ import { dataValidator, queryValidator } from '../../validators.js'
 export const pelangganSchema = Type.Object(
   {
     id_pelanggan: Type.Number(),
-    no_ktp: Type.String({ maxLength: 16 }),
+    no_ktp: Type.String({
+      minLength: 16,
+      maxLength: 16,
+      pattern: '^[0-9]{16}$'
+    }),
     nama: Type.String({ maxLength: 50 }),
     alamat: Type.String({ maxLength: 30 }),
     alamat_domisili: Type.String({ maxLength: 30 }),
     jenis_kelamin: Type.String({ maxLength: 10 }),
     nama_ibu: Type.String({ maxLength: 50 }),
     no_hp: Type.String({ maxLength: 15 }),
-    email: Type.String({ maxLength: 50 }),
+    email: Type.String({
+      maxLength: 50,
+      format: 'email'
+    }),
     pekerjaan: Type.String({ maxLength: 30 }),
     upload_ktp: Type.String({ maxLength: 100 }),
     password: Type.String({ maxLength: 100 })
