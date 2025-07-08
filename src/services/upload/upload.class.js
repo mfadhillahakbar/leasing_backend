@@ -1,5 +1,6 @@
 import fs from 'fs/promises'
 import path from 'path'
+import { fileTypeFromBuffer } from 'file-type';
 import { BadRequest } from '@feathersjs/errors'
 
 // This is a skeleton for a custom service class. Remove or add the methods you need here
@@ -24,7 +25,15 @@ export class UploadService {
     const file = req?.file;
 
     if (!file) {
-      throw new BadRequest('Tidak ada file yang diunggah');
+      throw new BadRequest('Tidak ada file yang diunggah.');
+    }
+
+    const fileType = await fileTypeFromBuffer(file.buffer);
+
+    const allowedMimeTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+
+    if (!fileType || !allowedMimeTypes.includes(fileType.mime)) {
+      throw new BadRequest('Format gambar tidak valid.');
     }
 
     const uploadDir = path.join(process.cwd(), 'public');
