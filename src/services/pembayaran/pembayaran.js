@@ -18,9 +18,29 @@ import { setNow } from 'feathers-hooks-common'
 import { restrictAdminRole } from '../../hooks/restrict-admin-role.js'
 import { includeTable } from '../../hooks/include-table.js'
 import { formatIncludeResult } from '../../hooks/format-include-result.js'
+import { BadRequest } from '@feathersjs/errors';
 
 export * from './pembayaran.class.js'
 export * from './pembayaran.schema.js'
+
+const instalmentValidation = () => {
+  return async (context) => {
+    const { app, data } = context;
+    const { id_penjualan, cicilan } = data;
+
+    const penjualan = await app.service('penjualan').get(id_penjualan);
+
+    if (!penjualan || !penjualan.angsuran) {
+      throw new BadRequest('Data angsuran untuk penjualan tidak ditemukan');
+    }
+
+    if (cicilan < penjualan.angsuran) {
+      throw new BadRequest(`Nilai cicilan tidak boleh kurang dari angsuran minimum: ${penjualan.angsuran}`);
+    }
+
+    return context;
+  };
+}
 
 // A configure function that registers the service and its hooks via `app.configure`
 export const pembayaran = app => {
@@ -52,7 +72,8 @@ export const pembayaran = app => {
       get: [includeTable(['tb_penjualan'])],
       create: [
         schemaHooks.validateData(pembayaranDataValidator),
-        schemaHooks.resolveData(pembayaranDataResolver)
+        schemaHooks.resolveData(pembayaranDataResolver),
+        instalmentValidation()
       ],
       patch: [
         schemaHooks.validateData(pembayaranPatchValidator),
