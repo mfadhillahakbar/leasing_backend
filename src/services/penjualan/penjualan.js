@@ -21,11 +21,23 @@ import { formatIncludeResult } from '../../hooks/format-include-result.js'
 import { handleSearch } from '../../hooks/handle-search.js'
 import { decrementMotorStock } from '../../hooks/decrement-motor-stock.js'
 import { generatePrefixOrder } from '../../hooks/generate-prefix-order.js'
-import { calcInstalment } from '../../hooks/calc-instalment.js'
 import { rollbackMotorStock } from '../../hooks/rollback-motor-stock.js'
 
 export * from './penjualan.class.js'
 export * from './penjualan.schema.js'
+
+const getUserId = () => {
+  return async context => {
+    const { params } = context;
+    const { user } = params;
+
+    const userId = user.id;
+
+    context.data.id_user = userId;
+
+    return context;
+  };
+};
 
 // A configure function that registers the service and its hooks via `app.configure`
 export const penjualan = app => {
@@ -60,7 +72,7 @@ export const penjualan = app => {
         schemaHooks.validateData(penjualanDataValidator),
         schemaHooks.resolveData(penjualanDataResolver),
         generatePrefixOrder(),
-        calcInstalment(),
+        getUserId(),
         decrementMotorStock()
       ],
       patch: [

@@ -24,7 +24,7 @@ export const penjualanExternalResolver = resolve({})
 
 // Schema for creating new entries
 export const penjualanDataSchema = Type.Pick(penjualanSchema, [
-  'id_pelanggan', 'id_motor', 'id_user', 'uang_muka', 'tenor'
+  'id_pelanggan', 'id_motor', 'uang_muka', 'tenor', 'angsuran'
 ], {
   $id: 'PenjualanData'
 })

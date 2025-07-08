@@ -54,7 +54,6 @@ export const user = app => {
       ],
       get: [
         authenticate('jwt'),
-        restrictAdminRole(),
         includeTable(['role'])
       ],
       create: [
