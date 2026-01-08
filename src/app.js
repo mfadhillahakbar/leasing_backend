@@ -15,6 +15,7 @@ import { configurationValidator } from './configuration.js'
 import { logger } from './logger.js'
 import { logError } from './hooks/log-error.js'
 import { mssql } from './mssql.js'
+import { authentication } from './authentication.js'
 import { services } from './services/index.js'
 import { channels } from './channels.js'
 
@@ -26,7 +27,7 @@ app.use(cors())
 app.use(json())
 app.use(urlencoded({ extended: true }))
 // Host the public folder
-app.use('/', serveStatic(app.get('public')))
+app.use('/public', serveStatic(app.get('public')))
 
 // Configure services and real-time functionality
 app.configure(rest())
@@ -39,8 +40,21 @@ app.configure(
 )
 app.configure(mssql)
 
+app.configure(authentication)
+
 app.configure(services)
 app.configure(channels)
+
+app.get('/download/report', async (req, res, next) => {
+  try {
+    await app.service('report').find({
+      query: req.query,
+      res
+    });
+  } catch (error) {
+    next(error);
+  }
+});
 
 // Configure a middleware for 404s and the error handler
 app.use(notFound())
